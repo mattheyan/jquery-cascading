@@ -21,6 +21,12 @@
 		});
 	}
 
+	function log(message, args) {
+		if (window.console && console.log) {
+			console.log(fmt(message, args));
+		}
+	}
+
 	function err(message, args) {
 		throw fmt(message, args || []);
 	}
@@ -70,6 +76,7 @@
 		this._selectedText = "";
 
 		var settings = this.settings = $.extend({
+			debug: false,
 			onValueChanged: function(val) { },
 			animate: false,
 			show: function(elem, callback) {
@@ -129,7 +136,7 @@
 			this.settings.show(elem, callback);
 		},
 		create: function create(parent) {
-			return $(parent).after("<select style='display:none;'></select>").next("select");
+			return $(parent).after("<select style=\"display:none;\"></select>").next("select");
 		},
 		contentLoaded: function contentLoaded(elem, parent, empty) {
 			var cascading = this;
@@ -168,7 +175,9 @@
 			removeDependants(elem, function(elem, callback) {
 				cascading.hide(elem, callback)
 			}, function() {
-				cascading.populate(cascading.create(elem), elem);
+				if (cascading._selectedValue) {
+					cascading.populate(cascading.create(elem), elem);
+				}
 			});
 		},
 		populate: function populate(elem, parent) {
@@ -192,3 +201,4 @@
 		return this;
 	};
 })();
+
