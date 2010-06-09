@@ -1,3 +1,14 @@
+/*!
+ * JQuery Cascading Plugin 0.1
+ * 
+ *
+ * Copyright 2010, Bryan Matthews
+ * Licensed under the GNU Lesser General Public License Version 3
+ * http://www.gnu.org/licenses/lgpl.html
+ *
+ * Date: Tue Jun  8 20:56:59 EDT 2010
+ */
+
 ; (function() {
 	var undefined;
 
