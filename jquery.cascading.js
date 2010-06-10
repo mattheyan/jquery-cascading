@@ -77,7 +77,7 @@
 
 		var settings = this.settings = $.extend({
 			debug: false,
-			onValueChanged: function(val) { },
+			onValueChanged: function(elem, val, text) { },
 			animate: false,
 			show: function(elem, callback) {
 				if (settings.animate) {
