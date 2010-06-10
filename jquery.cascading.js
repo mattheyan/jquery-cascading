@@ -72,12 +72,13 @@
 
 	function Cascading(elem, options) {
 		this._options = options;
-		this._selectedValue = "";
-		this._selectedText = "";
+		this._val = "";
+		this._text = "";
 
 		var settings = this.settings = $.extend({
 			debug: false,
 			onValueChanged: function(elem, val, text) { },
+			filter: function(elem, val, text, oldVal, oldText) { return true; },
 			animate: false,
 			show: function(elem, callback) {
 				if (settings.animate) {
@@ -120,20 +121,31 @@
 				return fmt(this.settings.url, [val]);
 			}
 			else {
-				err("Unknown url settings: " + this.settings.url.toString());
+				err("Unknown url settings: {0}.  Expected string or function(val).", [this.settings.url.toString()]);
 			}
 		},
 		hide: function hide(elem, callback) {
 			if (!this.settings.hide || !(this.settings.hide instanceof Function)) {
-				err("Unknown hide settings: " + this.settings.hide.toString());
+				err("Unknown hide settings: {0}.  Expected function(elem, callback).", [this.settings.hide.toString()]);
 			}
 			this.settings.hide(elem, callback);
 		},
 		show: function show(elem, callback) {
 			if (!this.settings.show || !(this.settings.show instanceof Function)) {
-				err("Unknown show settings: " + this.settings.show.toString());
+				err("Unknown show settings: {0}.  Expected function(elem, callback).", [this.settings.show.toString()]);
 			}
 			this.settings.show(elem, callback);
+		},
+		filter: function filter(elem, val, text, oldVal, oldText) {
+			if (!this.settings.filter) {
+				return;
+			}
+
+			if (!(this.settings.filter instanceof Function)) {
+				err("Unknown filter settings: {0}.  Expected function(elem, val, text, oldVal, oldText).", [this.settings.filter.toString()]);
+			}
+
+			return this.settings.filter(elem, val, text, oldVal, oldText);
 		},
 		create: function create(parent) {
 			return $(parent).after("<select style=\"display:none;\"></select>").next("select");
@@ -165,30 +177,53 @@
 		valueChanged: function valueChanged(elem) {
 			var cascading = this;
 
-			this._selectedValue = $(elem).val();
-			this._selectedText = $($(elem).children().get(elem.selectedIndex)).text();
+			var val = $(elem).val();
+			var oldVal = $(elem).data("cascading.val");
 
-			if (this.settings.onValueChanged && this.settings.onValueChanged instanceof Function) {
-				this.settings.onValueChanged(elem, this._selectedValue, this._selectedText);
+			var text = $($(elem).children().get(elem.selectedIndex)).text();
+			var oldText = $(elem).data("cascading.text");
+
+			if (this.filter(elem, val, text, oldVal, oldText) === false) {
+				// Reset value and exit early if the filter does not pass.
+				// This will bypass the cascading behavior's creation of a
+				// child select list and will NOT re-broadcast events.  Also,
+				// it is assumed that if the developer must respond to the 
+				// fact that the user's selection was reverted, then he/she
+				// can do so within the filter function itself.
+				$(elem).val(oldVal);
+				return;
 			}
 
-			removeDependants(elem, function(elem, callback) {
-				cascading.hide(elem, callback)
-			}, function() {
-				if (cascading._selectedValue) {
-					cascading.populate(cascading.create(elem), elem);
+			this._val = val;
+			$(elem).data("cascading.val", val);
+
+			this._text = text;
+			$(elem).data("cascading.text", text);
+
+			if (this.settings.onValueChanged && this.settings.onValueChanged instanceof Function) {
+				this.settings.onValueChanged(elem, val, text);
+			}
+
+			removeDependants(elem,
+				function hideFn(elem, callback) {
+					cascading.hide(elem, callback)
+				},
+				function callback() {
+					if (cascading._val) {
+						cascading.populate(cascading.create(elem), elem);
+					}
 				}
-			});
+			);
 		},
 		populate: function populate(elem, parent) {
 			var cascading = this;
-			$(elem).load(this.url(this._selectedValue), function(responseText, status) {
+			$(elem).load(this.url(this._val), function(responseText, status) {
 				cascading.contentLoaded(this, parent, $.trim(responseText).length === 0);
 			});
 		}
 	};
 
-	jQuery.fn.cascading = function(options) {
+	jQuery.fn.cascading = function cascading(options) {
 		if (this.length > 0) {
 			this.each(function() {
 				var cascading = new Cascading(this, options);
