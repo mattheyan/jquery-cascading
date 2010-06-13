@@ -8,7 +8,7 @@
 		
 		var returnValue = $target.cascading({
 			url: function(val) {
-				return "mocks/" + (val ? val : "__root") + ".htm";
+				return "mocks" + (val ? "/" + val : "") + "/";
 			},
 			onValueChanged: function(elem, val, text) {
 				selectedValue = val;

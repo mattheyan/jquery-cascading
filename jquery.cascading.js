@@ -195,7 +195,7 @@
 				// it is assumed that if the developer must respond to the 
 				// fact that the user's selection was reverted, then he/she
 				// can do so within the callback itself.
-				if(this.settings.onValueChanged(elem, val, text, olvVal, oldText) === false) {
+				if(this.settings.onValueChanged(elem, val, text, oldVal, oldText) === false) {
 					$(elem).val(oldVal);
 					return;
 				}	
@@ -218,13 +218,18 @@
 				}
 			);
 		},
+		load: function(elem, url, callback) {
+			$(elem).load(url, callback);
+		},
 		populate: function populate(elem, parent) {
 			var cascading = this;
-			$(elem).load(this.url(this._val), function(responseText, status) {
+			this.load(elem, this.url(this._val), function(responseText, status) {
 				cascading.contentLoaded(this, parent, $.trim(responseText).length === 0);
 			});
 		}
 	};
+
+	$(window).data("cascading.constructor", Cascading);
 
 	jQuery.fn.cascading = function cascading(options) {
 		if (this.length > 0) {
