@@ -77,7 +77,7 @@
 
 		var settings = this.settings = $.extend({
 			debug: false,
-			onValueChanged: function(elem, val, text) { },
+			onValueChanged: function(elem, val, text, oldVal, oldText) { },
 			filter: function(elem, val, text, oldVal, oldText) { return true; },
 			animate: false,
 			show: function(elem, callback) {
@@ -183,15 +183,22 @@
 			var text = $($(elem).children().get(elem.selectedIndex)).text();
 			var oldText = $(elem).data("cascading.text");
 
-			if (this.filter(elem, val, text, oldVal, oldText) === false) {
-				// Reset value and exit early if the filter does not pass.
+			if (this.settings.onValueChanged && this.settings.onValueChanged instanceof Function) {
+				if (!(this.settings.onValueChanged instanceof Function)) {
+					err("Unknown onValueChanged settings: {0}.  Expected function(elem, val, text, oldVal, oldText).", 
+						[this.settings.onValueChanged.toString()]);
+				}
+
+				// Reset value and exit early if the callback returns false.
 				// This will bypass the cascading behavior's creation of a
 				// child select list and will NOT re-broadcast events.  Also,
 				// it is assumed that if the developer must respond to the 
 				// fact that the user's selection was reverted, then he/she
-				// can do so within the filter function itself.
-				$(elem).val(oldVal);
-				return;
+				// can do so within the callback itself.
+				if(this.settings.onValueChanged(elem, val, text, olvVal, oldText) === false) {
+					$(elem).val(oldVal);
+					return;
+				}	
 			}
 
 			this._val = val;
@@ -199,10 +206,6 @@
 
 			this._text = text;
 			$(elem).data("cascading.text", text);
-
-			if (this.settings.onValueChanged && this.settings.onValueChanged instanceof Function) {
-				this.settings.onValueChanged(elem, val, text);
-			}
 
 			removeDependants(elem,
 				function hideFn(elem, callback) {
