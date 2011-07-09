@@ -9,13 +9,11 @@
  * Date: Tue Jun  8 20:56:59 EDT 2010
  */
 
-; (function() {
-	var undefined;
-
+(function() {
 	function fmt(format, values) {
-		return format.replace(/{([a-z0-9_.]+)}/ig, function $format$token(match, expr) {
-			var index = parseInt(expr);
-			return (index !== NaN && values[index] !== undefined && values[index] !== null) ?
+		return format.replace(/\{([a-z0-9_.]+)\}/ig, function $format$token(match, expr) {
+			var index = parseInt(expr, 10);
+			return (!isNaN(index) && values[index] !== undefined && values[index] !== null) ?
 				values[index].toString() :
 				"{" + expr + "}";
 		});
@@ -209,7 +207,7 @@
 
 			removeDependants(elem,
 				function hideFn(elem, callback) {
-					cascading.hide(elem, callback)
+					cascading.hide(elem, callback);
 				},
 				function callback() {
 					if (cascading._val) {
