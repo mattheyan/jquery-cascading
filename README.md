@@ -11,7 +11,7 @@ Basic initialization:
 The url option can be a function.
 
 		$("select.root").cascading({
-			url: function(val) {
+			url: function(val, elem, parent) {
 				return "someurl" + (val ? "/" + val : "") + "/";
 			}
 		});

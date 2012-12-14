@@ -2,6 +2,8 @@
 	var pendingTests = {};
 	var executingTestsSignal = new Signal("all pending tests signal");
 
+    window.logQUnit = false;
+
 	function log(category, message, args) {
 		function fmt(format, values) {
 			return format.replace(/{([a-z0-9_.]+)}/ig, function $format$token(match, expr) {
@@ -11,7 +13,9 @@
 					"{" + expr + "}";
 			});
 		}
-		//console.log(fmt(message, args));
+        if (logQUnit && window.console) {
+            console.log(fmt(message, args));
+        }
 	}
 
 	// override parse to avoid nasty recursion bug

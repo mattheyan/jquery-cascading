@@ -110,10 +110,10 @@
 	}
 
 	Cascading.prototype = {
-		url: function url(val) {
+		url: function url(val, elem, parent) {
 			assert(this.settings.url, "Url settings are not specified.");
 			if (this.settings.url instanceof Function) {
-				return this.settings.url(val);
+				return this.settings.url(val, elem, parent);
 			}
 			else if (this.settings.url.constructor === String) {
 				return fmt(this.settings.url, [val]);
@@ -146,7 +146,7 @@
 			return this.settings.filter(elem, val, text, oldVal, oldText);
 		},
 		create: function create(parent) {
-			return $(parent).after("<select style=\"display:none;\"></select>").next("select");
+			return $(parent).after("<select style=\"display:none;\"></select>").next("select")[0];
 		},
 		contentLoaded: function contentLoaded(elem, parent, empty) {
 			var cascading = this;
@@ -221,7 +221,7 @@
 		},
 		populate: function populate(elem, parent) {
 			var cascading = this;
-			this.load(elem, this.url(this._val), function(responseText, status) {
+			this.load(elem, this.url(this._val, elem, parent), function(responseText, status) {
 				cascading.contentLoaded(this, parent, $.trim(responseText).length === 0);
 			});
 		}
