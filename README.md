@@ -12,7 +12,7 @@ The url option can be a function.
 
 		$("select.root").cascading({
 			url: function(val, elem, parent) {
-				return "someurl" + (val ? "/" + val : "") + "/";
+				return "someurl/" + (parent ? (parent.id + "/") : "") + elem.id + (val ? "/" + val : "") + "/";
 			}
 		});
 
