@@ -6,12 +6,12 @@
     var results = [{
     
         "__default__": "<option value=''></option>\
-            <option value='invertibrates'>Invertibrates</option>\
+            <option value='invertebrates'>Invertebrates</option>\
             <option value='mammals'>Mammals</option>"
 
         }, {
 
-        "invertibrates": "<option value=''></option>\
+        "invertebrates": "<option value=''></option>\
 <option value='insects'>Insects</option>",
 
         "mammals": "<option value=''></option>\

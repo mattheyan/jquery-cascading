@@ -36,8 +36,8 @@
 	});
 
 	setupTest("4", { description: "Basic cascading #1", expect: 3 }, function() {
-		$target.val("invertibrates").trigger("change"); // NOTE: "change" has to be triggered manually
-		ok(selectedValue === "invertibrates", "Custom onValueChanged function should be called");
+		$target.val("invertebrates").trigger("change"); // NOTE: "change" has to be triggered manually
+		ok(selectedValue === "invertebrates", "Custom onValueChanged function should be called");
         ok($target.next("select").val() === "", "Next select list is blank");
 		equals($("select").length, 2, "Should be two select lists on the page after changing value");
 	});
