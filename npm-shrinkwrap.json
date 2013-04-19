@@ -126,6 +126,55 @@
         }
       }
     },
+    "grunt-contrib-watch": {
+      "version": "0.3.1",
+      "from": "grunt-contrib-watch@",
+      "resolved": "https://registry.npmjs.org/grunt-contrib-watch/-/grunt-contrib-watch-0.3.1.tgz",
+      "dependencies": {
+        "gaze": {
+          "version": "0.3.3",
+          "from": "gaze@~0.3.3",
+          "resolved": "https://registry.npmjs.org/gaze/-/gaze-0.3.3.tgz",
+          "dependencies": {
+            "minimatch": {
+              "version": "0.2.12",
+              "from": "minimatch@~0.2.9",
+              "dependencies": {
+                "lru-cache": {
+                  "version": "2.3.0",
+                  "from": "lru-cache@2"
+                },
+                "sigmund": {
+                  "version": "1.0.0",
+                  "from": "sigmund@~1.0.0"
+                }
+              }
+            },
+            "fileset": {
+              "version": "0.1.5",
+              "from": "fileset@~0.1.5",
+              "resolved": "https://registry.npmjs.org/fileset/-/fileset-0.1.5.tgz",
+              "dependencies": {
+                "glob": {
+                  "version": "3.1.21",
+                  "from": "glob@3.x",
+                  "dependencies": {
+                    "graceful-fs": {
+                      "version": "1.2.0",
+                      "from": "graceful-fs@~1.2.0"
+                    },
+                    "inherits": {
+                      "version": "1.0.0",
+                      "from": "inherits@1"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "grunt-contrib-jshint": {
       "version": "0.4.3",
       "from": "grunt-contrib-jshint@",
