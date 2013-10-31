@@ -5,6 +5,8 @@ A JQuery plugin for creating and deleting dependent selects dynamically based on
 
 Designed to allow a user to drill down into a hierarchy of unknown depth (e.g. categories).
 
+For more information, check out the [wiki](./wiki)!
+
 Usage
 -----
 
